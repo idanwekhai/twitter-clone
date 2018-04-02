@@ -1,0 +1,82 @@
+body {
+	 /*font-size: 120%;*/
+	 /*font-family: "Courier New", Courier, monospace;*/
+	 letter-spacing: 0.15em;
+	 background-color: #efefef;
+	}
+
+#tweet-head a{
+    text-decoration: none;
+}
+
+header {
+ border-bottom: 1px solid #999;
+ margin-bottom: 2rem;
+ display: flex;
+}
+
+.header {
+  margin-right: auto;
+}
+
+.new-tweet {
+	 display: flex;
+	 padding-top: 2rem;
+}
+
+.container{
+	 /*max-width: 700px;
+	 min-width: 300px;
+	 vertical-align: middle;*/
+     margin: 2em auto;
+	 padding: 20px;
+	 border: 4px  #000;
+	 background-color: #ffffff;
+}
+
+.tweet {
+	margin-bottom: 20px;
+}
+
+.tweet p{
+    margin-bottom: 0px;
+}
+
+.comments {
+    margin-bottom: 20px;
+}
+.comments p{
+	margin-bottom: 3px;
+}
+
+.new-tweet button {
+    height: 26px;
+    padding-right: 30px;
+    text-decoration: none;
+    padding-left: 30px;
+    background-color: #0b6ec3;
+    color: white;
+    border-left-width: 0px;
+    border-top-width: 0px;
+    border-bottom-width: 0px;
+    border-right-width: 0px
+}
+
+
+.submit, .cmt_btn button {
+	text-decoration: none;
+	height: 26px;
+    padding-right: 10px;
+    text-decoration: none;
+    padding-left: 10px;
+    background-color: #0b6ec3;
+    color: white;
+    border-left-width: 0px;
+    border-top-width: 0px;
+    border-bottom-width: 0px;
+    border-right-width: 0px
+	
+}
+.submit:hover, .new-tweet button:hover, .cmt_btn button:hover {
+	background-color: #0ca1c3;
+}

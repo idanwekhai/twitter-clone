@@ -1,0 +1,18 @@
+{% extends 'cloned/base.html' %}
+
+{% block title %}A twitter Clone{% endblock title %}
+{% block content %}
+{% for tweet in tweets %}
+ <div class="tweet">
+  <div class="section">
+   <p>{{ tweet.tweet }}</p>
+   <span><em>{{ tweet.author }}</em> <i>{{ tweet.date }}</i></span>
+   <span class="cmt_btn"><a href="{% url 'cloned:add_comment' tweet.pk %}"><button>Comment</button></a></span>
+  <form action="{% url 'cloned:tweet_like' tweet.pk %}" method="post">
+  	{% csrf_token %}
+  	<span><input class="submit" type="submit" value="Like"/><em> likes -- {{ tweet.tweet_likes }} </em></span>
+  </form>
+ </div>
+</div>
+{% endfor %}
+{% endblock content %}

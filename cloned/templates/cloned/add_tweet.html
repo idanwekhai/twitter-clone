@@ -1,0 +1,37 @@
+{% extends 'cloned/base.html' %}
+{% block title %}Add a Tweet{% endblock title %}
+
+{% block content %}
+<h1>New Tweet</h1>
+
+<form action="" method="post" class="form-horizontal">
+	{% csrf_token %}
+<div class="form-group">
+  <label for="id_author" class="col-sm-2 control-label">Name:</label> 
+  <div class="col-sm-6">
+    <input type="text" name="author" class="form-control" required id="id_author" placeholder="Name"/>
+  </div>
+</div>
+<div class="form-group">
+<label for="id_tweet" class="col-sm-2 control-label">Tweet:</label>
+<div class="col-sm-8">
+<textarea class="form-control" name="tweet" rows="6" required id="id_tweet"></textarea>
+</div>
+</div>
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-info">Tweet</button>
+    </div>
+  </div>
+</form>
+{% endblock content %}
+
+
+
+
+<!-- 
+<form action="" method="post" >
+{% csrf_token %}
+{{ form.as_p }}
+<input type="submit" value="Tweet"/>
+</form> -->
