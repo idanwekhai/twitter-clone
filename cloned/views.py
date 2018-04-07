@@ -6,10 +6,11 @@ from django.db.models import F
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
+from braces import views
 
 from profiles.models import Profile
 from .forms import CommentForm, TweetForm
-from .models import Tweet, Comment
+from .models import Tweet, Comment, Like
 
 class TweetListView(generic.ListView):
     template_name = 'cloned/home.html'
@@ -19,7 +20,7 @@ class TweetListView(generic.ListView):
         return Tweet.objects.all().order_by('-date')
 
 
-class TweetEditView(generic.edit.UpdateView):
+class TweetEditView(views.LoginRequiredMixin, generic.edit.UpdateView):
     model = Tweet
     fields = ['tweet']
     template_name = 'cloned/tweet_edit.html'
@@ -27,7 +28,7 @@ class TweetEditView(generic.edit.UpdateView):
     success_url = reverse_lazy('cloned:home')
 
 
-class TweetAddView(generic.edit.CreateView):
+class TweetAddView(views.LoginRequiredMixin, generic.edit.CreateView):
     model = Tweet
     template_name = 'cloned/add_tweet.html'
     form_class = TweetForm
@@ -39,7 +40,7 @@ class TweetAddView(generic.edit.CreateView):
         return HttpResponseRedirect(reverse('cloned:home'))
 
 
-class CommentAddView(generic.FormView):
+class CommentAddView(views.LoginRequiredMixin, generic.FormView):
     form_class = CommentForm
     template_name = 'cloned/add_comment.html'
     
@@ -63,8 +64,23 @@ class CommentAddView(generic.FormView):
         return render(request, self.template_name, {'form': form})
 
 
-class TweetLike(generic.View):
-    pass
+# class TweetLike(generic.View):
+#     pass
+
+@login_required
+def TweetLikeView(request, *args, **kwargs):
+    try:
+        tweet = Tweet.objects.get(pk=kwargs['pk'])
+
+        _, created = Like.objects.get_or_create(tweet=post, user=request.user)
+
+        if not created:
+            messages.warning(request, 'You\'ve already liked the tweet.')
+    except Post.DoesNotExist:
+        messages.warning(request, 'Tweet does not exist')
+
+    return HttpResponseRedirect(reverse_lazy('cloned:home',kwargs={'id': kwargs['id']}))
+
 
 # def CommentAdd(request, pk):
 #     tweet = get_object_or_404(Tweet, pk=pk)
