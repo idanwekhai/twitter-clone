@@ -1,0 +1,25 @@
+{% extends 'cloned/base.html' %}
+{% block content %}
+<h1>Edit Tweet</h1>
+<form action="" method="post">
+{% csrf_token %}
+<div class="form-group">
+<label for="id_tweet" class="col-sm-2 control-label">Tweet:</label>
+<div class="col-sm-6">
+<textarea class="form-control" name="tweet" rows="4" required id="id_tweet">
+	{{ tweet.tweet }}
+</textarea>
+</div>
+</div>
+ {% if form.errors %}
+ <div class="alert alert-danger" role="alert">Your tweet is more than 150 words.</div>
+ {% endif %}
+
+<div class="form-group">
+    <div class="col-sm-offset-6 col-sm-10">
+      <button type="submit" class="btn btn-info">Update</button>
+    </div>
+  </div>
+</form>
+{% endblock content %}
+
