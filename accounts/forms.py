@@ -41,7 +41,7 @@ class SignUpForm(forms.ModelForm):
     class Meta:
         model = User
         #exclude = ['last_login', 'date_joined']
-        fields = ['username', 'email', 'date_of_birth']# 'password', 'confirm_password', ]
+        fields = ['username', 'email'] #'date_of_birth', 'password', 'confirm_password', ]
 
     def __init__(self, *args, **kwargs):
         super(SignUpForm, self).__init__(*args, **kwargs)
@@ -75,7 +75,7 @@ class UserChangeForm(forms.ModelForm):
     password = ReadOnlyPasswordHashField()
     class Meta:
         model = User
-        fields = ('email', 'username', 'date_of_birth','password', 'is_active', 'is_staff')
+        fields = ('email', 'username', 'password', 'is_active', 'is_staff')
 
 
     def clean_password(self):

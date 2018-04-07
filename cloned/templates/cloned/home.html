@@ -7,20 +7,21 @@
 <div class="row">
   <div class="col-sm-8">
 	   <p><pre><code>{{ tweet.tweet }}</code></pre></p>
-	   <p><strong>{{ tweet.author }}</strong> on <em>{{ tweet.date|date:"D d M" }}</em></p>
+	   <p><strong>{{ tweet.author }}</strong> on <em>{{ tweet.date }}</em></p>
   </div>
    <div class="col-sm-4">
 	   <span class="cmt_btn"><a href="{% url 'cloned:add_comment' tweet.pk %}"><button class="btn btn-primary">Comment</button></a></span>
-	   <span>
+	   <!-- <span>
 	    <form action="{% url 'cloned:tweet_like' tweet.pk %}" method="post" style='display:inline;'>
 	  	{% csrf_token %}
 	  	<button class="btn btn-primary" type="submit">
            Likes <span class="badge">{{ tweet.tweet_likes }}</span>
         </button>
 	   </form>
-	</span>
+	</span> -->
    </div>
   </div>
 </div>
 {% endfor %}
 {% endblock content %}
+

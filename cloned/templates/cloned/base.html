@@ -15,11 +15,20 @@
 	<body>
 		<div class="container row">
 		<header>
-			<div class="header col-md-12">
-            <h2 id="tweet-head"><a href="{% url 'cloned:home' %}">Twitter</a></h2>
-            </div>
-            <div class="new-tweet">
-            	<a href="{% url 'cloned:add_tweet' %}"><button>Tweet</button></a>
+			
+           <div class="header col-sm-6">
+             <h2 id="tweet-head"><a href="{% url 'cloned:home' %}">Twitter</a></h2>
+           </div>
+           <div class="new-tweet col-sm-4">
+           	  {% if user.is_authenticated %}
+           	    <span><pre><code>Hi {{ user.username }}</code></pre></span>
+                <span style="padding-left: 30px"><a href="{% url 'logout' %}"><button class="btn btn-primary">logout</button></a></span>
+                <span style="padding-left: 30px"><a href="{% url 'cloned:add_tweet' %}"><button class="btn btn-primary">Tweet</button></a></span> 
+               {% else %}
+                 <span><a href="{% url 'login' %}"><button type="button" class="btn btn-primary">Login</button></a></span>
+                 <span style="padding-left: 30px"><a href="{% url 'accounts:signup' %}"><button class="btn btn-primary">SignUp</button></a></span>
+               {% endif %}
+              
             </div>
 		</header>
 		<div class="tweet-container col-md-12">
@@ -32,3 +41,4 @@
       <script src="{% static 'cloned/js/bootstrap.min.js' %}"></script>
 	</body>
 </html>
+

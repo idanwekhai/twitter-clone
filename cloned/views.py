@@ -1,47 +1,70 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
-# Create your views here.
 from django.views import generic
-#from django.views.generic.detail import SingleObjectMixin
-from .models import Tweet, Comment
 from django.db.models import F
-from .forms import CommentForm
+from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 
+
+from profiles.models import Profile
+from .forms import CommentForm, TweetForm
+from .models import Tweet, Comment
 
 class TweetListView(generic.ListView):
-    model = Tweet
     template_name = 'cloned/home.html'
     context_object_name = 'tweets'
+
+    def get_queryset(self):
+        return Tweet.objects.all().order_by('-date')
+
+
+class TweetEditView(generic.edit.UpdateView):
+    model = Tweet
+    fields = ['tweet']
+    template_name = 'cloned/tweet_edit.html'
+    context_object_name = 'tweet'
+    success_url = reverse_lazy('cloned:home')
+
 
 class TweetAddView(generic.edit.CreateView):
     model = Tweet
     template_name = 'cloned/add_tweet.html'
-    fields = ['author','tweet']
+    form_class = TweetForm
 
-class CommentAdd(generic.FormView):
-    #model = Tweet
-    #context_object_name = 'tweet'
+    def form_valid(self, form):
+        tweet = form.save(commit=False)
+        tweet.author = Profile.objects.get(user=self.request.user)
+        tweet.save()
+        return HttpResponseRedirect(reverse('cloned:home'))
+
+
+class CommentAddView(generic.FormView):
     form_class = CommentForm
     template_name = 'cloned/add_comment.html'
+    
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(initial=self.initial)
         tweet = get_object_or_404(Tweet, pk=kwargs.get('pk'))
-        comments = tweet.comment_set.all()
+        comments = tweet.comments.all()
         return render(request, self.template_name, {'form': form, 'tweet':tweet, 'comments':comments})
 
     def post(self, request, *args, **kwargs):
         tweet = get_object_or_404(Tweet, pk=kwargs.get('pk'))
-        comments = tweet.comment_set.all()
+        comments = tweet.comments.all()
         form = self.form_class(request.POST)
-        comment = Comment(comment_author=form['comment_author'].value(), comment_text=form['comment_text'].value())
+        comment = Comment(comment_text=form['comment_text'].value())
+        comment.comment_for = tweet
+        comment.comment_author = Profile.objects.get(user=self.request.user)
         if form.is_valid():
-            add_comment_to_tweet = tweet.comment_set.add(comment, bulk=False)
-            # <process form cleaned data>
+            add_comment_to_tweet = tweet.comments.add(comment, bulk=False)
             return HttpResponseRedirect(reverse('cloned:add_comment', args=(tweet.pk,)))
-
         return render(request, self.template_name, {'form': form})
+
+
+class TweetLike(generic.View):
+    pass
 
 # def CommentAdd(request, pk):
 #     tweet = get_object_or_404(Tweet, pk=pk)
@@ -54,15 +77,15 @@ class CommentAdd(generic.FormView):
 #     return render(request, 'cloned/add_comment.html', {'tweet':tweet, 'comments':comments, 'form': comment_form})
 
 
-def tweet_like(request, pk):
-    # for k, v in kwargs.items():
-    #     if "pk" in k:
-    #         tweet_pk = v
-    try:
-       tweet = get_object_or_404(Tweet, pk=pk)
-    except (KeyError, Tweet.DoesNotExist):
-        return render(request, 'cloned/home.html')
-    else:
-        tweet.tweet_likes = F('tweet_likes') + 1
-        tweet.save()
-        return HttpResponseRedirect(reverse('cloned:home'))
+# def tweet_like(request, pk):
+#     # for k, v in kwargs.items():
+#     #     if "pk" in k:
+#     #         tweet_pk = v
+#     try:
+#        tweet = get_object_or_404(Tweet, pk=pk)
+#     except (KeyError, Tweet.DoesNotExist):
+#         return render(request, 'cloned/home.html')
+#     else:
+#         tweet.tweet_likes = F('tweet_likes') + 1
+#         tweet.save()
+#         return HttpResponseRedirect(reverse('cloned:home'))

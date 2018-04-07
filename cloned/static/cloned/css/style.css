@@ -49,8 +49,8 @@ header {
 	margin-bottom: 3px;
 }
 
-.new-tweet button {
-    height: 26px;
+/*.new-tweet button {
+   height: 26px;
     padding-right: 30px;
     text-decoration: none;
     padding-left: 30px;
@@ -60,7 +60,7 @@ header {
     border-top-width: 0px;
     border-bottom-width: 0px;
     border-right-width: 0px
-}
+}*/
 
 
 .submit, .cmt_btn button {

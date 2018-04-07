@@ -22,7 +22,7 @@ class UserManager(BaseUserManager):
     to create `User` objects.
     """
 
-    def create_user(self, username, email, date_of_birth, password=None):
+    def create_user(self, username, email, password=None):
         """Create and return a `User` with an email, username and password."""
         if username is None:
             raise TypeError('Users must have a username.')
@@ -31,14 +31,13 @@ class UserManager(BaseUserManager):
             raise TypeError('Users must have an email address.')
 
         user = self.model(username=username, 
-        	email=self.normalize_email(email),
-        	date_of_birth=date_of_birtht)
+        	email=self.normalize_email(email))
         user.set_password(password)
         user.save()
 
         return user
 
-    def create_superuser(self, username, email, date_of_birth, password):
+    def create_superuser(self, username, email, password):
       """
       Create and return a `User` with superuser powers.
 
@@ -49,8 +48,7 @@ class UserManager(BaseUserManager):
           raise TypeError('Superusers must have a password.')
 
       user = self.create_user(username, 
-          email, 
-          date_of_birth=date_of_birth,
+          email,
           password=password)
       user.is_superuser = True
       user.is_staff = True
@@ -70,7 +68,7 @@ class User(AbstractBaseUser, PermissionsMixin, TimestampedModel):
     # the user anyways, we will also use the email for logging in because it is
     # the most common form of login credential at the time of writing.
     email = models.EmailField(db_index=True, verbose_name='email address', unique=True)
-    date_of_birth = models.DateField(default=timezone.now)
+    #date_of_birth = models.DateField(default=timezone.now)
 
     # When a user no longer wishes to use our platform, they may try to delete
     # there account. That's a problem for us because the data we collect is
@@ -134,6 +132,11 @@ class User(AbstractBaseUser, PermissionsMixin, TimestampedModel):
         the user's real name, we return their username instead.
         """
         return self.username
+
+     
+    def get_absolute_url(self):
+        return reverse('cloned:home')
+
 
     def _generate_jwt_token(self):
         """

@@ -10,15 +10,14 @@ from .forms import SignUpForm, UserChangeForm
 
 
 class UserAdmin(BaseUserAdmin):
-    """Admin for CusstomUserAdmin"""
+    """Admin for CustomUserAdmin"""
     #model = User
     form = UserChangeForm
     add_form = SignUpForm
-    #exclude = ['last_login', 'date_joined']
-    list_display = ('username', 'email', 'date_of_birth', 'is_active', 'is_staff')
+    list_display = ('username', 'email', 'is_active', 'is_staff')
     fieldsets = (
         (None, {'fields': ('email', 'password', 'username')}),
-        ('Personal info', {'fields': ('date_of_birth',)}),
+       # ('Personal info', {'fields': ('date_of_birth',)}),
         ('Permissions', {'fields': ('is_staff', 'is_active')}),
     )
     
@@ -26,7 +25,7 @@ class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'username', 'date_of_birth', 'password', 'confirm_password')}
+            'fields': ('email', 'username', 'password', 'confirm_password')}
         ),
     )
     search_fields = ['username']

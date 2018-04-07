@@ -24,10 +24,8 @@
 			 </div>
 		</div>
 			{% if form.errors %}
-			  <p class=" label label-danger">
-				 Your username and password didn't match.
-				 Please try again.
-			 </p>
+			  <div class="alert alert-danger" role="alert">Your username and password didn't match.
+				 Please try again.</div>
 			 {% endif %}
 			 <div class="form-group">
 			 <div class="col-sm-offset-2 col-sm-10">
