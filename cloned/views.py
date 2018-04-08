@@ -17,7 +17,7 @@ class TweetListView(generic.ListView):
     context_object_name = 'tweets'
 
     def get_queryset(self):
-        return Tweet.objects.all().order_by('-date')
+        return Tweet.objects.all().order_by('-date_created')
 
 
 class TweetEditView(views.LoginRequiredMixin, generic.edit.UpdateView):

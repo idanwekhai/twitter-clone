@@ -7,7 +7,7 @@
 <div class="row">
   <div class="col-sm-8">
 	   <p><pre><code>{{ tweet.tweet }}</code></pre></p>
-	   <p><strong>{{ tweet.author }}</strong> on <em>{{ tweet.date }}</em></p>
+	   <p><strong>{{ tweet.author }}</strong> on <em>{{ tweet.date_created }}</em></p>
   </div>
    <div class="col-sm-4">
 	   <span class="cmt_btn"><a href="{% url 'cloned:add_comment' tweet.pk %}"><button class="btn btn-primary">Comment</button></a></span>
