@@ -63,10 +63,12 @@ class CommentAddView(views.LoginRequiredMixin, generic.FormView):
             return HttpResponseRedirect(reverse('cloned:add_comment', args=(tweet.pk,)))
         return render(request, self.template_name, {'form': form})
 
-class TweetDeleteView(iew.LoginRequiredMixin, generic.DeleteView):
+
+class TweetDeleteView(views.LoginRequiredMixin, generic.DeleteView):
     model = Tweet
     template_name = 'cloned/tweet_delete.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('cloned:home')
+
 
 @login_required
 def TweetLikeView(request, *args, **kwargs):

@@ -3,7 +3,20 @@
 
 {% block content %}
 <span><h3>{{ tweet.tweet }}</h3></span>
-<span><a href="{% url 'cloned:edit_tweet' tweet.pk %}"><button class="btn btn-primary">Edit</button></a></span>
+<span>
+<div class="btn-group">
+ <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Menu <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="{% url 'cloned:edit_tweet' tweet.pk %}">Edit</a></li>
+    <li><a class="dropdown-item" href="{% url 'cloned:delete_tweet' tweet.pk %}">Delete</a></li>
+    <!--<a class="dropdown-item" href="{% url 'cloned:edit_tweet' tweet.pk %}"></a>-->
+  </div>
+</div>
+</span>
+
+
 <form action="" method="post" class="form-horizontal">
 	{% csrf_token %}
 <!-- <div class="form-group">
