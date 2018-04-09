@@ -100,7 +100,7 @@ class User(AbstractBaseUser, PermissionsMixin, TimestampedModel):
 
         This string is used when a `User` is printed in the console.
         """
-        return self.email
+        return self.username
 
     def has_perm(self, perm, obj=None):
     	"Does the user have a specific permission?"
