@@ -21,11 +21,6 @@ def UniqueUsernameIgnoreCaseValidator(value):
 
 
 class SignUpForm(forms.ModelForm):
-    # username = forms.CharField(
-    #     widget=forms.TextInput(attrs={'class': 'form-control'}),
-    #     max_length=30,
-    #     required=True,
-    #     help_text='Usernames may contain <strong>alphanumeric</strong>, <strong>_</strong> and <strong>.</strong> characters')  # noqa: E261
     password = forms.CharField(
         label="Password",
         widget=forms.PasswordInput(attrs={'class': 'form-control'}))
@@ -33,22 +28,16 @@ class SignUpForm(forms.ModelForm):
         widget=forms.PasswordInput(attrs={'class': 'form-control'}),
         label="Confirm your password",
         required=True)
-    # email = forms.CharField(
-    #     widget=forms.EmailInput(attrs={'class': 'form-control'}),
-    #     required=True,
-    #     max_length=75)
 
     class Meta:
         model = User
-        #exclude = ['last_login', 'date_joined']
-        fields = ['username', 'email'] #'date_of_birth', 'password', 'confirm_password', ]
+        fields = ['username', 'email'] 
 
     def __init__(self, *args, **kwargs):
         super(SignUpForm, self).__init__(*args, **kwargs)
         self.fields['username'].validators.append(InvalidUsernameValidator)
         self.fields['username'].validators.append(UniqueUsernameIgnoreCaseValidator)
         self.fields['email'].validators.append(UniqueEmailValidator)
-        #self.fields['email'].validators.append(SignupDomainValidator)
 
     def clean(self):
         cleaned_data = super(SignUpForm, self).clean()

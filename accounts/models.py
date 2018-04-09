@@ -151,3 +151,31 @@ class User(AbstractBaseUser, PermissionsMixin, TimestampedModel):
         }, settings.SECRET_KEY, algorithm='HS256')
 
         return token.decode('utf-8')
+
+class Connection(models.Model):
+    follower = models.ForeignKey('accounts.User',
+        related_name='follower',
+        on_delete=models.CASCADE)
+    following = models.ForeignKey('accounts.User',
+        related_name='following',
+        on_delete=models.CASCADE)
+    date_created = models.DateTimeField(auto_now_add=True)
+    
+    def follow(self, profile):
+        """"follow profile if we are not already folowing it"""
+        self.following.add(profile)
+
+    def unfollow(self, profile):
+        """"unfollow profile if we are already folowing it"""
+        self.following.remove(profile)
+
+    def is_following(self, profile):
+        """returns True if we are following a profile, otherwise False"""
+        return self.following.filter(pk=profile.pk).exists()
+ 
+    def is_followed_by(self, profile):
+        """Returns True is a profile is following us, otherwise False"""
+        return self.follower.filter(pk=profile.pk).exists()
+
+    def __str__(self):
+        return "{} : {}".format(self.follower.username, self.following.username)

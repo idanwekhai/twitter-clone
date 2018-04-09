@@ -10,7 +10,7 @@ class Tweet(models.Model):
     #name of the person who posted a tweet
 
     author  = models.ForeignKey(
-        'profiles.Profile',
+        'accounts.User',
         related_name='tweets',
         on_delete=models.CASCADE,)
 
@@ -44,7 +44,7 @@ class Comment(models.Model):
 
     #name/author of the person commenting
     comment_author = models.ForeignKey(
-        'profiles.Profile',
+        'accounts.User',
         related_name='comments',
         on_delete=models.CASCADE)
     #body of the comment
@@ -59,7 +59,7 @@ class Like(models.Model):
     tweet = models.ForeignKey(Tweet,
         related_name='liked_tweet',
         on_delete=models.CASCADE)
-    user = models.ForeignKey('profiles.Profile',
+    user = models.ForeignKey('accounts.User',
         related_name='liker',
         on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
