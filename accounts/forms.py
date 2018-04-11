@@ -1,7 +1,7 @@
 from django import forms
 from .models import User
 from django.core.exceptions import ValidationError
-from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.contrib.auth.forms import ReadOnlyPasswordHashField, PasswordChangeForm
 
 
 
@@ -72,3 +72,23 @@ class UserChangeForm(forms.ModelForm):
         # This is done here, rather than on the field, because the
         # field does not have access to the initial value
         return self.initial["password"]
+
+class ChangePasswordForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs['initial']['user']
+        super(ChangePasswordForm, self).__init__(user, *args, **kwargs)
+    new_password = forms.CharField(
+        label="New Password",
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        label="Confirm your password",
+        required=True)
+
+    def clean(self):
+        cleaned_data = super(PasswordChangeForm, self).clean()
+        new_password = self.cleaned_data.get('new_password')
+        confirm_password = self.cleaned_data.get('confirm_password')
+        if new_password and confirm_password and new_password != confirm_password:
+            raise forms.ValidationError("Passwords don't match")
+        return cleaned_data

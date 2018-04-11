@@ -5,8 +5,6 @@ from profiles.models import Profile
 # Create your models here
 
 class Tweet(models.Model):
-    #Number of likes for a particular tweeet
-    #tweet_likes = models.IntegerField(default=0)
     #name of the person who posted a tweet
 
     author  = models.ForeignKey(
@@ -78,7 +76,7 @@ class Like(models.Model):
         return self.tweet.filter(pk=tweet.pk).exists()
 
     def __str__(self):
-        return '{} : {}'.format(self.user, self.post)
+        return '{} : {}'.format(self.user, self.tweet)
 
 
 class Tag(models.Model):

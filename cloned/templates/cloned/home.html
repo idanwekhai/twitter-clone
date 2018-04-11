@@ -11,12 +11,18 @@
   </div>
    <div class="col-sm-4">
 	   <span class="cmt_btn"><a href="{% url 'cloned:add_comment' tweet.pk %}"><button class="btn btn-primary">Comment</button></a></span>
-	   <!-- <span>
+	  <!--  <span>
+	   	{% if user in tweet.liker %}
 	    <form action="{% url 'cloned:tweet_like' tweet.pk %}" method="post" style='display:inline;'>
 	  	{% csrf_token %}
-	  	<button class="btn btn-primary" type="submit">
-           Likes <span class="badge">{{ tweet.tweet_likes }}</span>
-        </button>
+	  	<a href="{% url 'cloned:unlike' tweet.pk %}"><button class="btn btn-primary" type="submit">
+           Likes <span class="badge">{{ like }}</span>
+        </button></a>
+        {% else %}
+        <a href="{% url 'cloned:like' tweet.pk %}"><button class="btn btn-primary" type="submit">
+           Likes <span class="badge">{{ like }}</span>
+        </button></a>
+        {% endif %}
 	   </form>
 	</span> -->
    </div>

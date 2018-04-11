@@ -7,12 +7,6 @@ class CommentForm(forms.ModelForm):
         exclude = ['comment_author']
         fields = ('comment_text',)
 
-    # def save(self, request, pk):
-    #     q = Tweet.objects.get(pk=pk)
-    #     q.comment_set.create(comment_author=name, comment_text=comment)
-    #     q.save()
-    #     return q
-
 
 class TweetForm(forms.ModelForm):
     class Meta:

@@ -1,16 +1,19 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
+from django.contrib import messages
 from django.views import generic
 from django.db.models import F
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
 from braces import views
+from accounts.funcs import get_logon_user
 
 from profiles.models import Profile
 from .forms import CommentForm, TweetForm
 from .models import Tweet, Comment, Like
+
 
 class TweetListView(generic.ListView):
     template_name = 'cloned/home.html'
@@ -19,13 +22,6 @@ class TweetListView(generic.ListView):
     def get_queryset(self):
         return Tweet.objects.all().order_by('-date_created')
 
-
-class TweetEditView(views.LoginRequiredMixin, generic.edit.UpdateView):
-    model = Tweet
-    fields = ['tweet']
-    template_name = 'cloned/tweet_edit.html'
-    context_object_name = 'tweet'
-    success_url = reverse_lazy('cloned:home')
 
 
 class TweetAddView(views.LoginRequiredMixin, generic.edit.CreateView):
@@ -40,6 +36,21 @@ class TweetAddView(views.LoginRequiredMixin, generic.edit.CreateView):
         return HttpResponseRedirect(reverse('cloned:home'))
 
 
+class TweetEditView(views.LoginRequiredMixin, generic.edit.UpdateView):
+    model = Tweet
+    fields = ['tweet']
+    template_name = 'cloned/tweet_edit.html'
+    context_object_name = 'tweet'
+    success_url = reverse_lazy('cloned:home')
+
+
+class TweetDeleteView(views.LoginRequiredMixin, generic.DeleteView):
+    model = Tweet
+    template_name = 'cloned/tweet_delete.html'
+    success_url = reverse_lazy('cloned:home')
+
+
+
 class CommentAddView(views.LoginRequiredMixin, generic.FormView):
     form_class = CommentForm
     template_name = 'cloned/add_comment.html'
@@ -49,7 +60,9 @@ class CommentAddView(views.LoginRequiredMixin, generic.FormView):
         form = self.form_class(initial=self.initial)
         tweet = get_object_or_404(Tweet, pk=kwargs.get('pk'))
         comments = tweet.comments.all()
-        return render(request, self.template_name, {'form': form, 'tweet':tweet, 'comments':comments})
+        user = self.request.user
+        likes = Like.objects.filter(tweet=tweet).count()
+        return render(request, self.template_name, {'form': form, 'tweet':tweet, 'comments':comments, 'likes':likes})
 
     def post(self, request, *args, **kwargs):
         tweet = get_object_or_404(Tweet, pk=kwargs.get('pk'))
@@ -64,25 +77,32 @@ class CommentAddView(views.LoginRequiredMixin, generic.FormView):
         return render(request, self.template_name, {'form': form})
 
 
-class TweetDeleteView(views.LoginRequiredMixin, generic.DeleteView):
-    model = Tweet
-    template_name = 'cloned/tweet_delete.html'
-    success_url = reverse_lazy('cloned:home')
-
-
 @login_required
 def TweetLikeView(request, *args, **kwargs):
     try:
         tweet = Tweet.objects.get(pk=kwargs['pk'])
 
-        _, created = Like.objects.get_or_create(tweet=post, user=request.user)
+        _, created = Like.objects.get_or_create(tweet=tweet, user=request.user)
 
         if not created:
             messages.warning(request, 'You\'ve already liked the tweet.')
     except Post.DoesNotExist:
         messages.warning(request, 'Tweet does not exist')
 
-    return HttpResponseRedirect(reverse_lazy('cloned:home',kwargs={'id': kwargs['id']}))
+    return HttpResponseRedirect(reverse_lazy('cloned:add_comment',kwargs={'pk': kwargs['pk']}))
+
+
+@login_required
+def TweetUnlikeView(request, *args, **kwargs):
+    try:
+        like = Like.objects.get(tweet__pk=kwargs['pk'], user=request.user)
+    except Like.DoesNotExist:
+        messages.warning(request, 'You didn\'t like this tweet.')
+    else:
+        like.delete()
+
+    return HttpResponseRedirect(reverse_lazy('cloned:add_comment', kwargs={'pk': kwargs['pk']}))
+
 
 
 # def CommentAdd(request, pk):
