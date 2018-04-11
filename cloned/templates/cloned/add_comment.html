@@ -4,7 +4,7 @@
 {% block content %}
 <span><h3>{{ tweet.tweet }}</h3></span>
 <span>
-{% if user in tweet.liker %}
+{% if is_liked  %}
   <a href="{% url 'cloned:unlike' tweet.pk %}"><button class="btn btn-primary" type="submit">
     Like <span class="badge">{{ likes }}</span>
   </button></a>

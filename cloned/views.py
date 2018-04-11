@@ -61,8 +61,9 @@ class CommentAddView(views.LoginRequiredMixin, generic.FormView):
         tweet = get_object_or_404(Tweet, pk=kwargs.get('pk'))
         comments = tweet.comments.all()
         user = self.request.user
+        is_liked = Like.objects.filter(tweet=tweet, user=user).exists()
         likes = Like.objects.filter(tweet=tweet).count()
-        return render(request, self.template_name, {'form': form, 'tweet':tweet, 'comments':comments, 'likes':likes})
+        return render(request, self.template_name, {'form': form, 'tweet':tweet, 'comments':comments, 'likes':likes, 'is_liked':is_liked})
 
     def post(self, request, *args, **kwargs):
         tweet = get_object_or_404(Tweet, pk=kwargs.get('pk'))
